@@ -1,0 +1,45 @@
+from ._anvil_designer import Bai3_BichNgocTemplate
+from anvil import *
+
+class Bai3_BichNgoc(Bai3_BichNgocTemplate):
+    def __init__(self, **properties):
+        # Set Form properties and Data Bindings.
+        self.init_components(**properties)
+        self.number_list = []  # Danh sách chứa các số nguyên nhập vào
+
+    def dayso_pressed_enter(self, **event_args):
+        """This method is called when the user presses Enter in this text box"""
+        number = self.dayso.text.strip() 
+        if number.isdigit():  # Kiểm tra xem chuỗi nhập vào có phải là số nguyên không
+            if not hasattr(self, 'number_list'):
+                self.number_list = []  # Khởi tạo danh sách số nguyên nếu chưa tồn tại
+            self.number_list.append(int(number))  # Thêm số nguyên vào danh sách
+            self.text_box_1.text =''
+            self.text_box_1.focus()
+            # Hiển thị danh sách số nguyên đã nhập vào hộp văn bản ketqua cách nhau bằng dấu phẩy
+            self.text_box_1.text = ', '.join(map(str, self.number_list))
+        else:
+            # Thông báo cho người dùng biết rằng họ đã nhập một giá trị không hợp lệ
+            alert("Vui lòng chỉ nhập các số nguyên hợp lệ.")
+
+    def insertion_sort(self, arr):
+        """Thực hiện sắp xếp dãy số nguyên bằng thuật toán Insertion Sort"""
+        for i in range(1, len(arr)):
+            key = arr[i]
+            j = i - 1
+            while j >= 0 and key < arr[j]:
+                arr[j + 1] = arr[j]
+                j -= 1
+            arr[j + 1] = key
+
+    def submit_button_click(self, **event_args):
+        """This method is called when the button is clicked"""
+        if self.number_list:
+            sorted_list = self.number_list[:]  
+            self.insertion_sort(sorted_list)  # Sắp xếp danh sách số nguyên
+          
+            self.text_box_1.text = ', '.join(map(str, sorted_list))
+        else:
+            self.text_box_1.text = "Không có số nào để sắp xếp."
+
+    
